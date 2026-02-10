@@ -3,61 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <title>랜덤 미션 뽑기</title>
+
   <style>
     body {
-      font-family: Arial;
+      font-family: "Pretendard", Arial;
       text-align: center;
-      padding: 50px;
-      background: #f5f5f5;
+      padding: 60px;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
     }
 
     h1 {
-      font-size: 40px;
+      font-size: 45px;
+      margin-bottom: 40px;
     }
 
     button {
       font-size: 25px;
-      padding: 15px 30px;
+      padding: 18px 40px;
       border: none;
-      border-radius: 15px;
+      border-radius: 20px;
       cursor: pointer;
-      background: black;
-      color: white;
-      margin-top: 30px;
+      background: white;
+      color: black;
+      font-weight: bold;
+      transition: 0.2s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    button:hover {
+      transform: scale(1.05);
     }
 
     #result {
-      font-size: 30px;
-      margin-top: 40px;
+      margin-top: 50px;
+      font-size: 32px;
       font-weight: bold;
+      padding: 30px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 25px;
+      display: inline-block;
+      min-width: 300px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
     }
   </style>
 </head>
+
 <body>
 
   <h1>🎯 랜덤 미션 뽑기</h1>
 
   <button onclick="pickMission()">미션 뽑기!</button>
 
-  <div id="result"></div>
+  <div id="result">버튼을 눌러 미션을 뽑아봐!</div>
 
   <script>
     const missions = [
       "스쿼트 1분 버티기",
       "플랭크 40초",
-      "한발 균형잡기 30초",
-      "팔굽혀펴기 10개",
-      "점프 20번",
-      "물 한 컵 마시기",
-      "웃기지 않고 1분 참기"
-    ];
-
-    function pickMission() {
-      const random = Math.floor(Math.random() * missions.length);
-      document.getElementById("result").innerText =
-        "🔥 오늘의 미션: " + missions[random];
-    }
-  </script>
-
-</body>
-</html>
