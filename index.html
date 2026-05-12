@@ -357,12 +357,6 @@ function revealCard(idx) {
 function selectMission(idx) {
     const selected = current[idx];
 
-    // 로컬 스토리지에 미션 저장 (새로고침해도 유지됨)
-    localStorage.setItem('mySecretMission', JSON.stringify(selected));
-    
-    showFinalMission(selected);
-    disableDrawButton('미션 뽑기 완료!');
-
     // 선택 카드만 가운데에 단독으로 보여주기
     document.getElementById('cardArea').innerHTML = `
         <div class="cards-single fade-in-up">
