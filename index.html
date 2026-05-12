@@ -395,16 +395,6 @@ function setGuide(text, active) {
     g.textContent = text;
     g.className = 'guide' + (active ? ' active' : '');
 }
-
-    // 페이지 로드 시 저장된 미션이 있는지 확인
-window.onload = function() {
-    const savedMission = localStorage.getItem('mySecretMission');
-    if (savedMission) {
-        const mission = JSON.parse(savedMission);
-        showFinalMission(JSON.parse(savedMission));
-        disableDrawButton('이미 미션을 받았습니다!');
-    }
-}
 </script>
 </body>
 </html>
