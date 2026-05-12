@@ -7,154 +7,198 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
         /* 기본 설정 */
-        :root {
-            --gold: #c5a059;
-            --deep-blue: #0f0c29;
-            --mystic-purple: #302b63;
-            --cream: #f3f0df;
-        }
+:root {
+    --gold: #c5a059;
+    --deep-blue: #0f0c29;
+    --mystic-purple: #302b63;
+    --cream: #f3f0df;
+}
 
-        body {
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Pretendard', sans-serif;
-            color: var(--cream);
-            overflow-x: hidden;
-        }
+body {
+    background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; 를 제거하여 상단부터 자연스럽게 배치되도록 함 */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px 10px; /* 상하좌우 여백 추가 */
+    font-family: 'Pretendard', sans-serif;
+    color: var(--cream);
+    overflow-x: hidden;
+}
 
-        h1 {
-            font-size: 1.8rem;
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
-            margin-bottom: 5px;
-        }
+/* 전체 내용을 감싸는 박스 (PC에서도 폭이 너무 넓어지지 않게 고정) */
+.main-container {
+    width: 100%;
+    max-width: 450px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
 
-        .subtitle {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 30px;
-        }
+h1 {
+    font-size: 1.6rem; /* 모바일에 맞춰 살짝 줄임 */
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
+    margin-bottom: 5px;
+}
 
-        /* 카드 컨테이너 (3D 환경) */
-        .card-container {
-            perspective: 500px;
-            width: 160px;
-            height: 240px;
-            cursor: pointer;
-            position: relative;
-        }
+.subtitle {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 25px;
+}
 
-        /* 실제 카드 */
-        .card {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border-radius: 20px;
-        }
+/* 카드들이 들어가는 가로 줄 */
+.card-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px; /* 카드 사이 간격 */
+    width: 100%;
+    margin-bottom: 20px;
+}
 
-        /* 카드가 뒤집혔을 때의 상태 */
-        .card.is-flipped {
-            transform: rotateY(180deg);
-        }
+/* 카드와 선택 버튼을 감싸는 개별 래퍼 */
+.card-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
 
-        /* 카드 앞/뒷면 공통 */
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            border: 5px solid var(--gold);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+/* 카드 컨테이너 (3D 환경) */
+.card-container {
+    perspective: 1000px; /* 수치를 높여 더 부드러운 3D 효과 */
+    width: 100%;
+    max-width: 160px; /* 모바일 2장 배치를 위해 최대 폭 제한 */
+    aspect-ratio: 2 / 3; /* 카드 비율 유지 */
+    cursor: pointer;
+    position: relative;
+}
 
-        /* 카드 앞면 (닫힌 상태 - 타로 문양) */
-        .card-front {
-            background: #1a1a2e;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.1) 0%, transparent 80%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l3 27 27 3-27 3-3 27-3-27-27-3 27-3z' fill='%23c5a059' fill-opacity='0.1'/%3E%3C/svg%3E");
-        }
+/* 실제 카드 */
+.card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border-radius: 15px;
+}
 
-        .card-front::after {
-            content: "SECRET\nMISSION";
-            white-space: pre;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--gold);
-            letter-spacing: 5px;
-            border: 1px solid var(--gold);
-            padding: 20px;
-        }
+/* 카드가 뒤집혔을 때 */
+.card.is-flipped {
+    transform: rotateY(180deg);
+}
 
-        /* 카드 뒷면 (미션 공개 상태) */
-        .card-back {
-            background: var(--cream);
-            color: #1a1a2e;
-            transform: rotateY(180deg);
-        }
+/* 카드 앞/뒷면 공통 */
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    border: 3px solid var(--gold); /* 모바일에서는 테두리를 살짝 얇게 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
 
-        .mission-cat {
-            font-size: 0.8rem;
-            color: #8b733a;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #8b733a;
-            padding-bottom: 5px;
-        }
+/* 카드 앞면 (닫힌 상태) */
+.card-front {
+    background: #1a1a2e;
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.1) 0%, transparent 80%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l3 27 27 3-27 3-3 27-3-27-27-3 27-3z' fill='%23c5a059' fill-opacity='0.1'/%3E%3C/svg%3E");
+}
 
-        .mission-text {
-            font-size: 1.3rem;
-            font-weight: 800;
-            line-height: 1.6;
-            word-break: keep-all;
-        }
+/* 가상 요소 텍스트 조정 (카드 폭에 맞게 자동 줄바꿈) */
+.card-front::after {
+    content: "SECRET\nMISSION";
+    white-space: pre;
+    text-align: center;
+    font-size: 1.1rem; /* 카드 크기에 맞춰 조정 */
+    font-weight: bold;
+    color: var(--gold);
+    letter-spacing: 2px;
+    border: 1px solid var(--gold);
+    padding: 10px;
+    width: 70%;
+}
 
-        /* 조작 버튼 */
-        .controls {
-            margin-top: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 300px;
-        }
+/* 카드 뒷면 (미션 공개 상태) */
+.card-back {
+    background: var(--cream);
+    color: #1a1a2e;
+    transform: rotateY(180deg);
+}
 
-        button {
-            padding: 15px 30px;
-            font-size: 1rem;
-            font-weight: bold;
-            border: 2px solid var(--gold);
-            background: transparent;
-            color: var(--gold);
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+.mission-cat {
+    font-size: 0.7rem;
+    color: #8b733a;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #8b733a;
+    padding-bottom: 3px;
+}
 
-        button:hover {
-            background: var(--gold);
-            color: white;
-            box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
-        }
+.mission-text {
+    font-size: 0.95rem; /* 모바일에서 글자가 넘치지 않게 조정 */
+    font-weight: 800;
+    line-height: 1.4;
+    word-break: keep-all;
+    text-align: center;
+}
 
-        button:active {
-            transform: scale(0.95);
-        }
+/* 조작 버튼 영역 */
+.controls {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: 2px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover:not(:disabled) {
+    background: var(--gold);
+    color: white;
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+}
+
+/* 비활성화 상태 (회색 처리) */
+button:disabled {
+    border-color: #555;
+    color: #888;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 개별 선택 버튼 전용 */
+.select-btn {
+    font-size: 0.8rem;
+    padding: 8px 15px;
+}
     </style>
 </head>
 <body>
