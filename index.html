@@ -193,12 +193,22 @@
             color: #333;
             transition: transform 0.15s, background-color 0.2s;
             margin-bottom: 1rem;
+
+            /* 비활성화 상태 (회색) */
+        .btn-main:disabled {
+            background-color: #ccc !important;
+            color: #888 !important;
+            cursor: not-allowed;
+            transform: none !important;
+            
         }
         .btn-main:hover { background-color: #ffb300; }
         .btn-main:active { transform: scale(0.95); }
         .btn-main:disabled { background: #eee; color: #bbb; cursor: not-allowed; transform: none; }
 
         .footer-text { font-size: 0.75rem; color: #ccc; }
+        .fade-in-up { animation: fadeInUp 0.5s ease both; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
         /* 선택 완료 페이드인 */
         @keyframes fadeInUp {
@@ -222,48 +232,46 @@
             <div class="card-scene solo">
                 <div class="card-inner">
                     <div class="card-face card-back">
-                        <span class="card-back-emoji">🎴</span>
-                        <p class="card-back-label">미션 뽑기</p>
+                        <span class="card-back-emoji">🃏</span>
+                        <p class="card-back-label">카드 뽑기</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <button class="btn-main" id="drawBtn" onclick="drawMissions()">🎲 미션 2장 뽑기</button>
+    <button class="btn-main" id="drawBtn" onclick="drawMissions()">🎲 미션카드 뽑기!</button>
 
     <p class="footer-text">※ 미션은 비밀입니다. 들키면 바다 입수! (농담)</p>
 </div>
 
 <script>
 const missions = [
-    { cat: "유형 1: 하늘에 촥! 붙기!", text: "담당 강사님(주강사님, 총무님)과 함께 손가락 하트 만들고 셀카 찍기" },
-    { cat: "유형 1: 하늘에 촥! 붙기!", text: "총무님께 '오늘따라 참 귀여우시네요' 혹은 '귀엽다'는 말 듣기" },
-    { cat: "유형 1: 하늘에 촥! 붙기!", text: "담당 강사님(주강사님)과 기분 좋게 '하이파이브' 2번 하기" },
-    { cat: "유형 1: 하늘에 촥! 붙기!", text: "총무님께 나란히 서서 팔짱끼고 사진 찍기" },
-    { cat: "유형 2: 사명자 친밀도 UP", text: "다른 차량 사명자에게 전화를 걸어 '사랑합니다, 연합합시다!' 외치고 끊기" },
-    { cat: "유형 2: 사명자 친밀도 UP", text: "오늘 파란색(또는 특정색) 아이템을 착용한 사명자 찾아 패션 칭찬하기" },
-    { cat: "유형 2: 사명자 친밀도 UP", text: "카페나 식당에서 다른 사명자의 빈 컵이나 쓰레기 3개 이상 대신 치워주기" },
-    { cat: "유형 2: 사명자 친밀도 UP", text: "누군가의 고민을 듣게 된다면 '제가 오늘 꼭 기도할게요'라고 답해주기" },
-    { cat: "유형 2: 사명자 친밀도 UP", text: "5명 이상 모인 곳에서 '우리는 하나!' 선창하고 후창 유도하기" },
-    { cat: "유형 2: 사명자 친밀도 UP", text: "오늘 하루 동안 서로 다른 사명자 5명에게 '엄지 척' 날려주기" },
-    { cat: "유형 2: 사명자 친밀도 UP", text: "상대방에게 'OO님은 진짜 센터의 기둥이세요'라고 말해주기" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "바다를 향해 '양양아!! 내가 왔다!' 라고 크게 외치기 (최소 3명 동반)" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "사진 찍어주는 척하면서 내 얼굴 셀카 3장 몰래 찍어두기" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "5명 이상 모인 곳에서 갑자기 스쿼트 10개 하기" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "하늘을 가리키며 '와! 저 구름 모양 진짜 신기하다!'라고 말해 3명 이상 쳐다보게 만들기" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "이동 중 차 안에서 무반주로 노래 한 구절 부르고 박수 유도하기" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "사람들 앞에서 당당하게 '모델 워킹'으로 5미터 걷기" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "카페 대화 중 갑자기 일어서서 1분간 미니 스피치하기 (주제 자유)" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "주변 사람 중 한 명의 특징이나 말투 10초간 흉내 내기 (기분 좋게!)" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "카페 음악에 맞춰 아주 진지하고 우아하게 손가락 지휘 30초간 하기" },
-    { cat: "유형 3: 텐션 UP! 웃음 유발", text: "서피비치 백사장에 '사랑해요♡ 청년센터' 크게 쓰고 인증샷 찍기" },
-    { cat: "유형 4: 일상 소소 미션", text: "상대방과 가위바위보를 해서 연속 2번 이기기 (내기 금지!)" },
-    { cat: "유형 4: 일상 소소 미션", text: "누군가 영상 촬영을 할 때 뒤에서 몰래 '꽃받침' 포즈로 출연하기" },
-    { cat: "유형 4: 일상 소소 미션", text: "물병이나 소지품을 머리 위에 올리고 5초간 버티기 성공하기" },
-    { cat: "유형 4: 일상 소소 미션", text: "상대방에게 '와, 오늘 진짜 에너지 넘치시네요!'라는 말 듣기" },
-    { cat: "유형 4: 일상 소소 미션", text: "일명 '아재 개그' 하나 던져서 누군가를 피식 웃게 만들기" },
-    { cat: "유형 4: 일상 소소 미션", text: "서피비치 주변의 쓰레기 3개 주워서 쓰레기통에 버리기" }
+    { cat: "하늘에 촥! 붙어!", text: "담당 강사님(주강사님, 총무님)과 함께 손가락 하트 만들고 셀카 찍기" },
+    { cat: "하늘에 촥! 붙어!", text: "총무님께 '오늘따라 참 귀여우시네요' 혹은 '귀엽다'는 말 듣기" },
+    { cat: "하늘에 촥! 붙어!", text: "담당 강사님(주강사님)과 기분 좋게 '하이파이브' 2번 하기" },
+    { cat: "하늘에 촥! 붙어!", text: "총무님께 나란히 서서 팔짱끼고 사진 찍기" },
+    { cat: "사명자 친밀도 UP", text: "다른 기수 사명자에게 "사랑합니다"라는 말 듣기" },
+    { cat: "사명자 친밀도 UP", text: "나에 대한 칭찬듣기 (ex.표정이 밝으시네요, 웃는게 넘 예쁘세요 등등)" },
+    { cat: "사명자 친밀도 UP", text: "카페나 식당에서 같은 테이블의 사명자에게 디저트 or 반찬 올려주기" },
+    { cat: "사명자 친밀도 UP", text: "누군가의 고민을 들어주고 "제가 오늘 꼭 기도할게요" 하고 갑자기 주기도문 외우기" },
+    { cat: "사명자 친밀도 UP", text: "5명 이상 모인 곳에서 '우리는' 선창하고, '하나!' 후창 유도하기" },
+    { cat: "사명자 친밀도 UP", text: "오늘 하루 동안 서로 다른 사명자 5명에게 '엄지 척' 받아내기" },
+    { cat: "사명자 친밀도 UP", text: "3명 이상과 따뜻한 포옹하기" },
+    { cat: "텐션 UP! 웃음 유발", text: "바다를 향해 '파도야! 가라~!!' 라고 크게 외치기 (최소 3명이상 함께 있어야 성공)" },
+    { cat: "텐션 UP! 웃음 유발", text: "사진 찍어주는 척하면서 내 얼굴 셀카 3장 몰래 찍어두기(셀카 공개필수^^)" },
+    { cat: "텐션 UP! 웃음 유발", text: "5명 이상 모인 곳에서 갑자기 스쿼트 10개 하기(하루동안 누적가능)" },
+    { cat: "텐션 UP! 웃음 유발", text: "이동 중 차 안에서 무반주로 노래 한 구절 부르고 호응 유도하기" },
+    { cat: "텐션 UP! 웃음 유발", text: "당당하게 '모델 워킹'으로 걸어가서 총무님이랑 눈 마주치고 포즈취한뒤 돌아서기" },
+    { cat: "텐션 UP! 웃음 유발", text: "카페 대화 중 갑자기 일어서서 30초간 미니 스피치하기(자유주제)" },
+    { cat: "텐션 UP! 웃음 유발", text: "청년센터 사명자 중 2명을 골라 특징이나 말투 성대모사 또는 흉내내기" },
+    { cat: "텐션 UP! 웃음 유발", text: "카페 음악에 맞춰 아주 진지하고 우아하게 손가락 지휘 10초간 하기" },
+    { cat: "텐션 UP! 웃음 유발", text: "서피비치 백사장에 '청년센터 사랑해요♡' 크게 쓰고 백사장에 누워서 같이 인증샷 찍기"},
+    { cat: "일상 소소 미션", text: "상대방과 가위바위보를 해서 연속 2번 이기기 (내기 금지!)" },
+    { cat: "일상 소소 미션", text: "누군가 영상 촬영을 할 때 뒤에서 몰래 '꽃받침' 포즈로 출연하기(2번 이상)" },
+    { cat: "일상 소소 미션", text: "어떤 사명자의 물건을 주머니 속에 숨겨놨다가 '어? 내거어딨지?' 하면 "여깄지~" 하면서 꺼내주기" },
+    { cat: "일상 소소 미션", text: "상대방에게 '와, 오늘 진짜 에너지(생기) 넘치시네요!'라는 말 듣기" },
+    { cat: "일상 소소 미션", text: "일명 '아재 개그' 하나 던져서 누군가를 피식 웃게 만들기" },
 ];
 
 let remaining = [...missions];
@@ -271,10 +279,16 @@ let current = [null, null];
 let revealed = [false, false];
 let phase = 'idle';
 
+// 페이지 로드 시 저장된 미션이 있는지 확인
+window.onload = function() {
+    const savedMission = localStorage.getItem('mySecretMission');
+    if (savedMission) {
+        showFinalMission(JSON.parse(savedMission));
+        disableDrawButton('이미 미션을 받았습니다!');
+
 function drawMissions() {
-    if (remaining.length < 2) {
-        // 미션 다 소진되면 초기화
-        remaining = [...missions];
+    const drawBtn = document.getElementById('drawBtn');
+    if (drawBtn.disabled) return;
     }
 
     phase = 'picking';
@@ -291,7 +305,7 @@ function drawMissions() {
                 <div class="card-scene" id="scene0" onclick="revealCard(0)">
                     <div class="card-inner" id="inner0">
                         <div class="card-face card-back">
-                            <span class="card-back-emoji">🎴</span>
+                            <span class="card-back-emoji">🃏</span>
                             <p class="card-back-label">카드 1</p>
                         </div>
                         <div class="card-face card-front" id="front0">
@@ -306,7 +320,7 @@ function drawMissions() {
                 <div class="card-scene" id="scene1" onclick="revealCard(1)">
                     <div class="card-inner" id="inner1">
                         <div class="card-face card-back">
-                            <span class="card-back-emoji">🎴</span>
+                            <span class="card-back-emoji">🃏</span>
                             <p class="card-back-label">카드 2</p>
                         </div>
                         <div class="card-face card-front" id="front1">
@@ -340,13 +354,13 @@ function revealCard(idx) {
 }
 
 function selectMission(idx) {
-    const selected = current[idx];
+    const selected = currentMissions[idx];
 
-    // remaining에서 선택된 미션 제거
-    const selIdx = remaining.findIndex(m => m === selected);
-    if (selIdx > -1) remaining.splice(selIdx, 1);
-
-    phase = 'idle';
+    // 로컬 스토리지에 미션 저장 (새로고침해도 유지됨)
+    localStorage.setItem('mySecretMission', JSON.stringify(selected));
+    
+    showFinalMission(selected);
+    disableDrawButton('미션 뽑기 완료!');
 
     // 선택 카드만 가운데에 단독으로 보여주기
     document.getElementById('cardArea').innerHTML = `
@@ -367,6 +381,12 @@ function selectMission(idx) {
 
     document.getElementById('drawBtn').disabled = false;
     document.getElementById('drawBtn').textContent = '🎲 미션 뽑기 완료!';
+}
+
+function disableDrawButton(text) {
+    const btn = document.getElementById('drawBtn');
+    btn.disabled = true;
+    btn.textContent = text;
 }
 
 function setGuide(text, active) {
