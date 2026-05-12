@@ -22,7 +22,6 @@
         .card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.2rem 1rem; gap: 0.5rem; }
         .card-back { background: #1a1a2e; border: 3px double #c5a059; background-image: radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.1) 0%, transparent 80%), url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0l2 13 13 2-13 2-2 13-2-13-13-2 13-2z' fill='%23c5a059' fill-opacity='0.1'/%3E%3C/svg%3E"); }
         .card-back-emoji { font-size: 40px; animation: float 2.5s ease-in-out infinite; }
-        
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
         .card-back-label { font-size: 13px; color: #ccc; margin-top: 4px; }
         .card-front { background: #fdfaf0; border: 3px solid #c5a059; transform: rotateY(180deg); }
@@ -61,7 +60,6 @@
 </div>
 
 <script>
-// 미션 리스트
 const missions = [
     { cat: "하늘에 촥! 붙어!", text: "담당 강사님(주강사님, 총무님)과 함께 손가락 하트 만들고 셀카 찍기" },
     { cat: "하늘에 촥! 붙어!", text: "총무님께 '오늘따라 참 귀여우시네요' 혹은 '귀엽다'는 말 듣기" },
@@ -95,7 +93,7 @@ let current = [null, null];
 let revealed = [false, false];
 let phase = 'idle';
 
-// 1. 페이지 로드 시 기존 저장 데이터 확인
+// 1. 초기 로딩 시 저장된 미션이 있는지 확인
 window.onload = function() {
     const saved = localStorage.getItem('mySecretMission');
     if (saved) {
@@ -103,7 +101,7 @@ window.onload = function() {
     }
 };
 
-// 2. 미션 2장 뽑기 함수
+// 2. 미션 뽑기 버튼 클릭 시
 function drawMissions() {
     const drawBtn = document.getElementById('drawBtn');
     if (drawBtn.disabled) return;
@@ -111,7 +109,8 @@ function drawMissions() {
     phase = 'picking';
     revealed = [false, false];
 
-    const shuffled = [...remaining].sort(() => Math.random() - 0.5);
+    // 무작위 2장 추출
+    const shuffled = [...missions].sort(() => Math.random() - 0.5);
     current[0] = shuffled[0];
     current[1] = shuffled[1];
 
@@ -148,7 +147,7 @@ function drawMissions() {
     setGuide('카드를 클릭해서 미션을 확인하세요!', true);
 }
 
-// 3. 카드 뒤집기 함수
+// 3. 카드 뒤집기
 function revealCard(idx) {
     if (phase !== 'picking' || revealed[idx]) return;
     revealed[idx] = true;
@@ -157,18 +156,18 @@ function revealCard(idx) {
     if (revealed[0] && revealed[1]) {
         document.getElementById('pick0').style.display = 'inline-block';
         document.getElementById('pick1').style.display = 'inline-block';
-        setGuide('하나를 선택해 주세요! 👆', true);
+        setGuide('하나를 선택하세요! 👆', true);
     }
 }
 
-// 4. 최종 미션 선택 함수
+// 4. 미션 최종 선택 및 저장
 function selectMission(idx) {
     const selected = current[idx];
-    localStorage.setItem('mySecretMission', JSON.stringify(selected)); // 저장
+    localStorage.setItem('mySecretMission', JSON.stringify(selected));
     showFinalMission(selected);
 }
 
-// 5. 최종 화면 표시 함수
+// 5. 최종 미션 화면에 그리기 (중요: 이 함수가 누락되어 있었습니다)
 function showFinalMission(mission) {
     document.getElementById('cardArea').innerHTML = `
         <div class="cards-single fade-in-up">
@@ -185,7 +184,7 @@ function showFinalMission(mission) {
     const btn = document.getElementById('drawBtn');
     btn.disabled = true;
     btn.textContent = '🎲 미션 뽑기 완료!';
-    setGuide('당신의 비밀 미션입니다! 들키지 마세요! 🔥', true);
+    setGuide('당신의 비밀 미션입니다! 들키면 바다 입수! 🔥', true);
 }
 
 function setGuide(text, active) {
