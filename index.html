@@ -6,131 +6,155 @@
     <title>🕵️ 청년센터 단합 개인 비밀미션!</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* 기본 설정 */
+        :root {
+            --gold: #c5a059;
+            --deep-blue: #0f0c29;
+            --mystic-purple: #302b63;
+            --cream: #f3f0df;
+        }
 
         body {
-            font-family: 'Pretendard', sans-serif;
-            background-color: #f0f8ff;
-            min-height: 100vh;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem 1rem;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Pretendard', sans-serif;
+            color: var(--cream);
+            overflow-x: hidden;
         }
 
-        .container {
-            background: white;
-            padding: 2.5rem 1.5rem;
-            border-radius: 28px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-            text-align: center;
-            max-width: 460px;
+        h1 {
+            font-size: 1.8rem;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        /* 카드 컨테이너 (3D 환경) */
+        .card-container {
+            perspective: 1000px;
+            width: 300px;
+            height: 480px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* 실제 카드 */
+        .card {
             width: 100%;
-            border-top: 8px solid #0056b3;
-        }
-
-        h1 { color: #1a2a3a; font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing: -0.5px; }
-        .subtitle { font-size: 0.9rem; color: #666; margin-bottom: 2rem; }
-
-        /* 안내 문구 */
-        .guide {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 1.5rem;
-            min-height: 20px;
-            transition: all 0.3s;
-        }
-        .guide.active { color: #0056b3; font-weight: 700; transform: scale(1.05); }
-
-        /* ── 타로 카드 스타일 ── */
-        .card-area { min-height: 240px; margin-bottom: 1.5rem; }
-        
-        .cards-row { display: flex; gap: 12px; justify-content: center; }
-        .cards-single { display: flex; justify-content: center; }
-
-        .card-wrap { flex: 1; max-width: 180px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .card-scene { perspective: 1000px; width: 100%; height: 230px; cursor: pointer; }
-        .card-scene.solo { width: 200px; cursor: default; }
-
-        .card-inner {
-            width: 100%; height: 100%;
+            height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .card-inner.flipped { transform: rotateY(180deg); }
-
-        .card-face {
-            position: absolute; inset: 0;
-            backface-visibility: hidden;
-            border-radius: 16px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 1rem;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border-radius: 20px;
         }
 
-        /* 타로 뒷면 (이미지 없이 CSS로 구현) */
-        .card-back {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); /* 신비로운 그라데이션 */
-            border: 4px solid #fff;
-            box-shadow: inset 0 0 0 2px rgba(255,215,0,0.5), 0 5px 15px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        /* 타로 문양 */
-        .card-back::after {
-            content: '✨';
-            font-size: 40px;
-            color: rgba(255,255,255,0.8);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* 카드 앞면 */
-        .card-front {
-            background: #fff;
-            border: 2px solid #0056b3;
+        /* 카드가 뒤집혔을 때의 상태 */
+        .card.is-flipped {
             transform: rotateY(180deg);
-            box-shadow: 0 5px 15px rgba(0,86,179,0.1);
         }
-        .card-front.selected { border: 3px solid #ffd700; background: #fffdf0; }
+
+        /* 카드 앞/뒷면 공통 */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            border: 5px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 카드 앞면 (닫힌 상태 - 타로 문양) */
+        .card-front {
+            background: #1a1a2e;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.1) 0%, transparent 80%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l3 27 27 3-27 3-3 27-3-27-27-3 27-3z' fill='%23c5a059' fill-opacity='0.1'/%3E%3C/svg%3E");
+        }
+
+        .card-front::after {
+            content: "SECRET\nMISSION";
+            white-space: pre;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            letter-spacing: 5px;
+            border: 1px solid var(--gold);
+            padding: 20px;
+        }
+
+        /* 카드 뒷면 (미션 공개 상태) */
+        .card-back {
+            background: var(--cream);
+            color: #1a1a2e;
+            transform: rotateY(180deg);
+        }
 
         .mission-cat {
-            font-size: 0.7rem; font-weight: 800; color: #0056b3;
-            background: #eef6ff; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px;
-        }
-        .mission-text-card {
-            font-size: 0.95rem; font-weight: 600; color: #333; line-height: 1.6; word-break: keep-all;
-        }
-
-        /* 버튼 스타일 */
-        .pick-btn {
-            display: none; padding: 8px 16px; font-size: 13px; font-weight: 700;
-            border-radius: 50px; border: none; cursor: pointer;
-            background: #0056b3; color: white; transition: 0.2s;
+            font-size: 0.8rem;
+            color: #8b733a;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #8b733a;
+            padding-bottom: 5px;
         }
 
-        .btn-main {
-            width: 100%; padding: 1rem; font-size: 1rem; font-weight: 700;
-            border-radius: 12px; border: none; cursor: pointer;
-            background-color: #0056b3; color: white;
-            transition: all 0.3s; margin-bottom: 1rem;
-        }
-        .btn-main:hover { background-color: #004494; }
-        /* 비활성화 상태 (회색) */
-        .btn-main:disabled {
-            background-color: #ccc !important;
-            color: #888 !important;
-            cursor: not-allowed;
-            transform: none !important;
+        .mission-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.6;
+            word-break: keep-all;
         }
 
-        .footer-text { font-size: 0.75rem; color: #bbb; margin-top: 10px; }
-        .fade-in-up { animation: fadeInUp 0.5s ease both; }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        /* 조작 버튼 */
+        .controls {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 300px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--gold);
+            color: white;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
